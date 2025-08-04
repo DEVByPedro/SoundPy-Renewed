@@ -246,6 +246,7 @@ def playMusic(
             main_button.content = ft.Icon(ft.Icons.PAUSE_SHARP, color="black")
             mixer.music.set_volume(current_vol[0])
             position_seconds[0] = 0
+            slider.value = 0
             slider.max = MP3(path).info.length
             slider.min = 0
             slider.on_change = lambda e: on_slider_change(e, page)

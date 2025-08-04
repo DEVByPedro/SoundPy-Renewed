@@ -26,7 +26,6 @@ def add_playlist(name: str):
     with open(fileJSON, "w") as file:
         json.dump(playlist, file, indent=4)
 
-
 def addMusic(idPlaylist, path):
     with open(fileJSON, "r") as file:
         playlist = json.load(file)
@@ -38,7 +37,6 @@ def addMusic(idPlaylist, path):
     with open(fileJSON, "w") as file:
         json.dump(playlist, file, indent=4)
     return "Added"
-
 
 def remove_playlist_by_name(name: str):
     with open(fileJSON, "r") as file:
@@ -63,12 +61,10 @@ def remove_playlist_by_name(name: str):
     with open(fileJSON, "w") as file:
         json.dump(playlist, file, indent=4)
 
-
 def get_all_playlists():
     with open(fileJSON, "r") as file:
         playlist = json.load(file)
     return playlist["playlistNames"]
-
 
 def get_all_playlist_ids():
     with open(fileJSON, "r") as file:
@@ -79,7 +75,6 @@ def get_all_playlist_ids():
         all_ids.append(row[1])
     return all_ids
 
-
 def getPlaylistNameByIndex(index):
     with open(fileJSON, "r") as file:
         playlist = json.load(file)
@@ -87,7 +82,6 @@ def getPlaylistNameByIndex(index):
         if pl[0] == index:
             return pl[1]
     return ""
-
 
 def getDuration(id):
     with open(fileJSON, "r") as file:
@@ -109,7 +103,6 @@ def getDuration(id):
             minutes = minutes % 60
             return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
     return "00:00:00"
-
 
 def getPlaylistMusicsById(
     e,
@@ -148,7 +141,6 @@ def getPlaylistMusicsById(
     body.content.update()
     body.update()
     page.update()
-
 
 def setContent(
     e,
@@ -199,7 +191,6 @@ def setContent(
     body_column.update()
     page.update()
 
-
 def get_all_playlist_musics(id, limit):
     def getPlaylistLen(id):
         with open(fileJSON, "r") as file:
@@ -230,7 +221,6 @@ def get_all_playlist_musics(id, limit):
     except IndexError as e:
         return musics
 
-
 def deleteByIndex(idPlaylist, index):
     with open(fileJSON, "r") as file:
         playlist = json.load(file)
@@ -249,7 +239,6 @@ def deleteByIndex(idPlaylist, index):
                 return 1
     return -1
 
-
 def getIndexByPath(idPlaylist, path):
     with open(fileJSON, "r") as file:
         playlist = json.load(file)
@@ -264,7 +253,6 @@ def getIndexByPath(idPlaylist, path):
                 return play[1].index(path)
     return 0
 
-
 def editPlaylistName(idPlaylist, newName):
     with open(fileJSON, "r") as file:
         playlist = json.load(file)
@@ -276,7 +264,6 @@ def editPlaylistName(idPlaylist, newName):
         json.dump(playlist, file, indent=4)
     return "Edited"
 
-
 def containsMusic(id, path):
     with open(fileJSON, "r") as file:
         playlist = json.load(file)
@@ -285,7 +272,6 @@ def containsMusic(id, path):
             if path in music[1]:
                 return True
     return False
-
 
 def getPhotoImage(path: str):
     if os.path.exists(path):
@@ -300,7 +286,6 @@ def getPhotoImage(path: str):
         return "No Image Found"
     return "#0A0A0A"
 
-
 def getMusicByIndex(idPlaylist, index):
     with open(fileJSON, "r") as file:
         playlist = json.load(file)
@@ -312,7 +297,6 @@ def getMusicByIndex(idPlaylist, index):
     except Exception as e:
         return ""
 
-
 def pause_or_unpause(e):
     if mixer.music.get_busy():
         pause(e)
@@ -321,14 +305,11 @@ def pause_or_unpause(e):
         unpause(e)
         return 0
 
-
 def pause(e):
     return mixer.music.pause()
 
-
 def unpause(e):
     return mixer.music.unpause()
-
 
 def get_all_playlists_musics():
     all_songs = []
@@ -340,7 +321,6 @@ def get_all_playlists_musics():
 
     return all_songs
 
-
 def getPlaylistIdByMusicPath(path: str):
     all_ids = get_all_playlist_ids()
 
@@ -349,10 +329,27 @@ def getPlaylistIdByMusicPath(path: str):
             if music == path:
                 return id + 1
 
-
 def getPathByName(name: str):
     all_musics = get_all_playlists_musics()
 
     for music in all_musics:
         if music.__contains__(name):
             return music
+
+def reload_musics():
+    for i in range(len(get_all_playlist_ids())):
+        i += 1
+
+        all_new_musics = []
+
+        with open(fileJSON, "r") as file:
+            playlist = json.load(file)
+
+        for musicPath in playlist["playlistMusics"][i-1][1]:
+            all_new_musics.append(os.path.abspath("arquives\\"+os.path.basename(musicPath)))
+
+        for j in range(len(all_new_musics)):
+            playlist["playlistMusics"][i-1][1][j] = all_new_musics[j]
+
+        with open(fileJSON, "w") as file:
+            json.dump(playlist, file, indent=4)

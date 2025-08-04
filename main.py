@@ -23,11 +23,14 @@ crnt_pos = ft.Text("00:00", size=14, color="white")
 crnt_max = ft.Text("00:00", size=14, color="white")
 current_vol = [0.5]
 
-
 def main(page: ft.Page):
     page.padding = 0
     page.bgcolor = colors.background_color
     page.theme_mode = ft.ThemeMode.DARK
+    page.window_fav_icon = os.path.abspath("Icon.jpg")
+    page.title = "Sound Py - DEMO"
+
+    playlistConfig.reload_musics()
 
     def selectAndCloseSideBar(
         e, playlist_id, body, page, crnt_msc, crnt_artist, crnt_img
