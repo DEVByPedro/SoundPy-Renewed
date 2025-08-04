@@ -858,7 +858,7 @@ def AllPlaylistSongs(
         ),
         on_click=excludeSongs,
     )
-
+    playlistConfig.reload_musics()
     insert_all_songs(limit[0])
 
     currentPlaylistTitle = ft.Text(
